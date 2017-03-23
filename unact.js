@@ -15,15 +15,15 @@ function hlist(e, start, args) {
       if (v === undefined || v === null) {
         ;
       } else if (v instanceof Function) {
-//        console.log("OPTIMIZE!");
+        // console.log("OPTIMIZE!");
         var vv = v();
-//        var vh = !vv || vv.hashCode;
-//        var c = cache[vh];
-//        if (c) yyy++;
+        // var vh = !vv || vv.hashCode;
+        // var c = cache[vh];
+        // if (c) yyy++;
         hlist(e, 0, [vv])
       } else if (v instanceof HTMLElement) {
-// subelements don't effect this dom elements rendering!
-//        e.h('html', (e.append(v), v.hashCode));
+        // subelements don't effect this dom elements rendering!
+        // e.h('html', (e.append(v), v.hashCode));
         e.append(v);
       } else if (v instanceof String) {
         e.h('text', (e.append(v), v));
