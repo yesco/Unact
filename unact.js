@@ -75,3 +75,4 @@ function render(what, where) {
   where.innerHTML = '';
   where.append(what);
 }
+

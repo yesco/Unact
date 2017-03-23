@@ -48,3 +48,10 @@ A tag can be manipulated by setting
 
 `unsafehtml("&nbsp;")` inserts raw html.
 
+## rendering
+
+`render(HTMLElement)` as created with functions above.
+
+`render(HTMLElement, 'root')` the id of the element to change, will retry every 100ms if element is not yet created.
+
+`render(HTMLElement, destination_HTMLElement)` will replace all children of destination.
