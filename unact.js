@@ -30,7 +30,11 @@ function hlist(e, start, args) {
       } else if (Array.isArray(v)) {
         hlist(e, 0, v);
       } else if (v instanceof Object) {
-        e.h('text', (e.append(v), v));
+        if (v.length !== undefined && v.toString === {}.toString) { // array style object
+          hlist(e, 0, v);
+        } else {
+          e.h('text', (e.append(v), v));
+        }
       } else {
         e.h('text', (e.append(v), v));
       }
