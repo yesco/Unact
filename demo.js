@@ -62,7 +62,10 @@ function bouncy_handopt(n, pos, w, z) {
       }
       i = 0;
       bouncy_handopt.num = div(n).i('num');
-      render(span(h1('bouncy_handopt'), bouncy_handopt.num, div(bouncy_handopt.l)), 'handopt');
+      render(span(h1('bouncy_handopt'),
+                  "only fast when run alone",
+                  bouncy_handopt.num,
+                  div(bouncy_handopt.l)), 'handopt');
     }
 
     // update

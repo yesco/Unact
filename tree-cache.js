@@ -6,6 +6,72 @@ var xxx = 0, yyy = 0;
 var hash = {}; cache = {};
 var trace = 0;
 
+function diff(a, b) {
+  console.log('diff.eq', a === b);
+  console.log('diff.hashCode', a.hashCode === b.hashCode);
+  console.log('diff.a', a.hashCode);
+  console.log('diff.b', b.hashCode);
+  console.log('diff.innerHTML', a.innerHTML === b.innerHTML);
+  if (a === b) return;
+  if (a.hashCode === b.hashCode) return;
+  if (a.innerHTML === b.innerHTML) return;
+}
+
+// http://stackoverflow.com/questions/6122571/simple-non-secure-hash-function-for-javascript
+function toHex(v) {
+  var ret = ((v<0?0x8:0)+((v >> 28) & 0x7)).toString(16) + (v & 0xfffffff).toString(16);
+  while (ret.length < 8) ret = '0'+ret;
+  return ret;
+}
+
+function hashCode(o, l) {
+  l = l || 2;
+  var i, c, r = [];
+  for (i=0; i<l; i++)
+    r.push(i*268803292);
+  function stringify(o) {
+    var i,r;
+    if (o === null) return 'n';
+    if (o === true) return 't';
+    if (o === false) return 'f';
+    if (o instanceof Date) return 'd:'+(0+o);
+    i=typeof o;
+    if (i === 'string') return 's:'+o.replace(/([\\\\;])/g,'\\$1');
+    if (i === 'number') return 'n:'+o;
+    if (o instanceof Function) return 'm:'+o.toString().replace(/([\\\\;])/g,'\\$1');
+    if (o instanceof Array) {
+      r=[];
+      for (i=0; i<o.length; i++) 
+        r.push(stringify(o[i]));
+      return 'a:'+r.join(';');
+    }
+    r=[];
+    for (i in o) {
+      r.push(i+':'+stringify(o[i]))
+    }
+    return 'o:'+r.join(';');
+  }
+  o = stringify(o);
+  for (i=0; i<o.length; i++) {
+    for (c=0; c<r.length; c++) {
+      r[c] = (r[c] << 13)-(r[c] >> 19);
+      r[c] += o.charCodeAt(i) << (r[c] % 24);
+      r[c] = r[c] & r[c];
+    }
+  }
+  for (i=0; i<r.length; i++) {
+    r[i] = toHex(r[i]);
+  }
+  return r.join('');
+}
+
+xxx = 0;
+yyy = 0;
+
+hash = {}; cache = {};
+
+trace = 0;
+
 function Tree(t, old) {
   if (trace) {
     console.log("TREE.trace", t);
@@ -87,61 +153,3 @@ function doit(){
  }, 0);
 };
 doit();
-
-function blinky(i){
-  setTimeout(function(){
-    var l = [];
-    for(let j = 0; j < N; j++) {
-      l.push(div(j).s('width', '30px').s('background', j == i ? 'black' : 'white').s('display', 'inline-block'));
-    }
-    i += z;
-    if (i === 0) {
-      var tm = Date.now() - start;
-      console.log('blinky', tm/2/N);
-      start = Date.now();
-    }
-    if (i >= N || i < 0) { z = -z; i += z; }
-    if (0) {
-      var nw = span(h1(l)).i('foo');
-      d.replaceWith(nw);
-      d = document.getElementById('foo');
-    } else {
-      d.innerHTML = h1(l).innerHTML;
-    }
-    blinky(i);
-  }, 0);
-}
-
-var l;
-function fast(i){
-  setTimeout(function(){
-    if (!l) {
-      l = [];
-      for(let j = 0; j < N; j++) {
-        l.push(div(j).i('x' + j)
-               .s('width', '30px')
-               .s('display', 'inline-block')
-               );
-      }
-      i = 0;
-      var nw = span(h1(l)).i('foo');
-      d.replaceWith(nw);
-    }
-
-    // update
-    l[i].s('background', 'white');
-    
-    i += z;
-    if (i === 0) {
-      var tm = Date.now() - start;
-      console.log('blinky', tm/2/N);
-      start = Date.now();
-    }
-    if (i >= N || i < 0) { z = -z; i += z; }
-
-    // update
-    l[i].s('background', 'black');
-
-    fast(i);
-  }, 0);
-}
